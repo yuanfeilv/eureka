@@ -268,6 +268,7 @@ public interface EurekaClientConfig {
      *
      * @return true if the DNS mechanism should be used for fetching urls, false otherwise.
      */
+    // 是否使用dns 获取Server 所在地址
     boolean shouldUseDnsForFetchingServiceUrls();
 
     /**
@@ -383,6 +384,7 @@ public interface EurekaClientConfig {
      * Gets the region (used in AWS datacenters) where this instance resides.
      *
      * @return AWS region where this instance resides.
+     * // 或者所在区域
      */
     String getRegion();
 
@@ -397,6 +399,7 @@ public interface EurekaClientConfig {
      * @param region the region where this instance is deployed.
      *
      * @return the list of available zones accessible by this instance.
+     * 获取所在区域的可用区
      */
     String[] getAvailabilityZones(String region);
 

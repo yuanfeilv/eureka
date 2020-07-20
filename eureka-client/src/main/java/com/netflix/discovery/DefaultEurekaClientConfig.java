@@ -68,8 +68,11 @@ public class DefaultEurekaClientConfig implements EurekaClientConfig {
     public static final String DEFAULT_ZONE = "defaultZone";
     public static final String URL_SEPARATOR = "\\s*,\\s*";
 
+    // 命名空间
     private final String namespace;
+    // 配置文件对象
     private final DynamicPropertyFactory configInstance;
+    // http 传输配置
     private final EurekaTransportConfig transportConfig;
 
     public DefaultEurekaClientConfig() {
@@ -80,8 +83,9 @@ public class DefaultEurekaClientConfig implements EurekaClientConfig {
         this.namespace = namespace.endsWith(".")
                 ? namespace
                 : namespace + ".";
-
+        // 初始化配置文件对象
         this.configInstance = Archaius1Utils.initConfig(CommonConstants.CONFIG_FILE_NAME);
+        // 初始化http 传输配置
         this.transportConfig = new DefaultEurekaTransportConfig(namespace, configInstance);
     }
 

@@ -47,6 +47,7 @@ public interface EurekaInstanceConfig {
      *
      * @return the (appname scoped) unique id for this instance
      */
+    // 注册到eureka server 的唯一id
     String getInstanceId();
 
     /**
@@ -54,6 +55,7 @@ public interface EurekaInstanceConfig {
      *
      * @return string denoting the name.
      */
+    // 注册带eureka 的名字
     String getAppname();
 
     /**
@@ -61,6 +63,8 @@ public interface EurekaInstanceConfig {
      *
      * @return string denoting the name.
      */
+
+    // app 的组名
     String getAppGroupName();
 
     /**

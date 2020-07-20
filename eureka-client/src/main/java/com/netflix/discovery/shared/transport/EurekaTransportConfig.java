@@ -9,6 +9,7 @@ public interface EurekaTransportConfig {
 
     /**
      * @return the reconnect inverval to use for sessioned clients
+     * 重连时间
      */
     int getSessionedClientReconnectIntervalSeconds();
 

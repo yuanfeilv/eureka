@@ -21,13 +21,14 @@ public final class Archaius1Utils {
     private static final String EUREKA_ENVIRONMENT = "eureka.environment";
 
     public static DynamicPropertyFactory initConfig(String configName) {
-
+        // 单例模式DynamicPropertyFactory
         DynamicPropertyFactory configInstance = DynamicPropertyFactory.getInstance();
+        // 配置文件名
         DynamicStringProperty EUREKA_PROPS_FILE = configInstance.getStringProperty("eureka.client.props", configName);
 
         String env = ConfigurationManager.getConfigInstance().getString(EUREKA_ENVIRONMENT, "test");
         ConfigurationManager.getConfigInstance().setProperty(ARCHAIUS_DEPLOYMENT_ENVIRONMENT, env);
-
+        // 将文件添加到环境中
         String eurekaPropsFile = EUREKA_PROPS_FILE.get();
         try {
             ConfigurationManager.loadCascadedPropertiesFromResources(eurekaPropsFile);

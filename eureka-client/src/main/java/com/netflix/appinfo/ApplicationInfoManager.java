@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Singleton
+// 应用信息管理器
 public class ApplicationInfoManager {
     private static final Logger logger = LoggerFactory.getLogger(ApplicationInfoManager.class);
 
@@ -55,12 +56,17 @@ public class ApplicationInfoManager {
         }
     };
 
+    // 单例模式
     private static ApplicationInfoManager instance = new ApplicationInfoManager(null, null, null);
 
+    // 状态变更监听器
     protected final Map<String, StatusChangeListener> listeners;
+    // 应用实例状态匹配
     private final InstanceStatusMapper instanceStatusMapper;
 
+    // 应用实例信息
     private InstanceInfo instanceInfo;
+    //应用实例配置
     private EurekaInstanceConfig config;
 
     public static class OptionalArgs {

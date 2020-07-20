@@ -1369,6 +1369,7 @@ public class InstanceInfo {
      *            - The InstanceInfo object of the instance.
      * @return - The zone in which the particular instance belongs to.
      */
+    // 第一个元素即为其可用区
     public static String getZone(String[] availZones, InstanceInfo myInfo) {
         String instanceZone = ((availZones == null || availZones.length == 0) ? "default"
                 : availZones[0]);
