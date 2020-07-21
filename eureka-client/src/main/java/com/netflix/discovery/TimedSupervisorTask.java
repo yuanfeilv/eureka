@@ -65,11 +65,13 @@ public class TimedSupervisorTask extends TimerTask {
         try {
             future = executor.submit(task);
             threadPoolLevelGauge.set((long) executor.getActiveCount());
+            // 阻塞直至线程有返回
             future.get(timeoutMillis, TimeUnit.MILLISECONDS);  // block until done or timeout
             delay.set(timeoutMillis);
             threadPoolLevelGauge.set((long) executor.getActiveCount());
             successCounter.increment();
         } catch (TimeoutException e) {
+            // 超时返回则将timeout 失败次数加一
             logger.warn("task supervisor timed out", e);
             timeoutCounter.increment();
 

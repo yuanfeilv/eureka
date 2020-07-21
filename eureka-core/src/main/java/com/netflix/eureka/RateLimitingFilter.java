@@ -82,6 +82,7 @@ import org.slf4j.LoggerFactory;
  * </li>
  * </ul>
  *
+ * 令牌桶过滤器
  * @author Tomasz Bak
  */
 @Singleton

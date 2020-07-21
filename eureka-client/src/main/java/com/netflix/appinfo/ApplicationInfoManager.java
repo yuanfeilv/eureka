@@ -169,6 +169,7 @@ public class ApplicationInfoManager {
      * of a status change event.
      *
      * @param status Status of the instance
+     *  设置实例的状态
      */
     public synchronized void setInstanceStatus(InstanceStatus status) {
         InstanceStatus next = instanceStatusMapper.map(status);
@@ -180,6 +181,7 @@ public class ApplicationInfoManager {
         if (prev != null) {
             for (StatusChangeListener listener : listeners.values()) {
                 try {
+                    // 通知从prev 状态转换为next 状态
                     listener.notify(new StatusChangeEvent(prev, next));
                 } catch (Exception e) {
                     logger.warn("failed to notify listener: {}", listener.getId(), e);

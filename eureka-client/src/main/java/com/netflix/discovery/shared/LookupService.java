@@ -24,6 +24,7 @@ import com.netflix.appinfo.InstanceInfo;
  *
  * @author Karthik Ranganathan, Greg Kim.
  * @param <T> for backward compatibility
+ *  获取存活的应用
 
  */
 public interface LookupService<T> {
