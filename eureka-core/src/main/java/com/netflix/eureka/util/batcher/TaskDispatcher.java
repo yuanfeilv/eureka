@@ -15,6 +15,7 @@ package com.netflix.eureka.util.batcher;
  *
  * @author Tomasz Bak
  */
+// 创建任务分发器
 public interface TaskDispatcher<ID, T> {
 
     void process(ID id, T task, long expiryTime);

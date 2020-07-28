@@ -112,6 +112,7 @@ public class ResponseCacheImpl implements ResponseCache {
                 }
             });
 
+    // 只读缓存，如果对实时要求比较高可以关闭，但是可能影响效率
     private final ConcurrentMap<Key, Value> readOnlyCacheMap = new ConcurrentHashMap<Key, Value>();
 
     private final LoadingCache<Key, Value> readWriteCacheMap;

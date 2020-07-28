@@ -68,6 +68,7 @@ public abstract class AbstractJerseyEurekaHttpClient implements EurekaHttpClient
     }
 
     @Override
+    // 取消续约操作
     public EurekaHttpResponse<Void> cancel(String appName, String id) {
         String urlPath = "apps/" + appName + '/' + id;
         ClientResponse response = null;

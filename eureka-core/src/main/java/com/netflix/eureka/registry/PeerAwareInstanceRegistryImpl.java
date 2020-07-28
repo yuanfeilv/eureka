@@ -209,6 +209,7 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
         int count = 0;
 
         for (int i = 0; ((i < serverConfig.getRegistrySyncRetries()) && (count == 0)); i++) {
+            // 未读取到注册信息，sleep 等待
             if (i > 0) {
                 try {
                     Thread.sleep(serverConfig.getRegistrySyncRetryWaitMs());
@@ -217,11 +218,14 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
                     break;
                 }
             }
+            // 获取注册信息
             Applications apps = eurekaClient.getApplications();
             for (Application app : apps.getRegisteredApplications()) {
                 for (InstanceInfo instance : app.getInstances()) {
                     try {
+                        // 判断节点是否能注册到当前实例中
                         if (isRegisterable(instance)) {
+                            // 注册方法
                             register(instance, instance.getLeaseInfo().getDurationInSecs(), true);
                             count++;
                         }
@@ -376,6 +380,7 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
     public boolean cancel(final String appName, final String id,
                           final boolean isReplication) {
         if (super.cancel(appName, id, isReplication)) {
+            // 复制信息
             replicateToPeers(Action.Cancel, appName, id, null, null, isReplication);
 
             return true;
@@ -396,11 +401,14 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
      */
     @Override
     public void register(final InstanceInfo info, final boolean isReplication) {
+        // 租约过期时间
         int leaseDuration = Lease.DEFAULT_DURATION_IN_SECS;
         if (info.getLeaseInfo() != null && info.getLeaseInfo().getDurationInSecs() > 0) {
             leaseDuration = info.getLeaseInfo().getDurationInSecs();
         }
+        // 注册应用实例信息
         super.register(info, leaseDuration, isReplication);
+        //eureka-server 复制
         replicateToPeers(Action.Register, info.getAppName(), info.getId(), info, null, isReplication);
     }
 
@@ -617,6 +625,7 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
                 numberOfReplicationsLastMin.increment();
             }
             // If it is a replication already, do not replicate again as this will create a poison replication
+            // eureka-Server 发起的请求或者集群为空
             if (peerEurekaNodes == Collections.EMPTY_LIST || isReplication) {
                 return;
             }
@@ -626,8 +635,10 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
                 if (peerEurekaNodes.isThisMyUrl(node.getServiceUrl())) {
                     continue;
                 }
+                // 发起同步操作
                 replicateInstanceActionsToPeers(action, appName, id, info, newStatus, node);
             }
+
         } finally {
             tracer.stop();
         }

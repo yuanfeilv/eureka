@@ -206,6 +206,7 @@ public class ApplicationInfoManager {
      * see {@link InstanceInfo#getHostName()} for explanation on why the hostname is used as the default address
      */
     public void refreshDataCenterInfoIfRequired() {
+        // 获取hostnae
         String existingAddress = instanceInfo.getHostName();
 
         String existingSpotInstanceAction = null;

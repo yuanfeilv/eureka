@@ -51,7 +51,7 @@ public class DefaultEndpoint implements EurekaEndpoint {
         this.port = port;
         this.isSecure = isSecure;
         this.relativeUri = relativeUri;
-
+        // 几个属性拼接成serviceUrl
         StringBuilder sb = new StringBuilder()
                 .append(isSecure ? "https" : "http")
                 .append("://")

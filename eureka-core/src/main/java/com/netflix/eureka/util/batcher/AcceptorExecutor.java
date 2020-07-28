@@ -62,9 +62,11 @@ class AcceptorExecutor<ID, T> {
     private final Deque<ID> processingOrder = new LinkedList<>();
 
     private final Semaphore singleItemWorkRequests = new Semaphore(0);
+    // 单任务工作队列
     private final BlockingQueue<TaskHolder<ID, T>> singleItemWorkQueue = new LinkedBlockingQueue<>();
 
     private final Semaphore batchWorkRequests = new Semaphore(0);
+    // 多任务工作队列
     private final BlockingQueue<List<TaskHolder<ID, T>>> batchWorkQueue = new LinkedBlockingQueue<>();
 
     private final TrafficShaper trafficShaper;
@@ -180,22 +182,29 @@ class AcceptorExecutor<ID, T> {
         return singleItemWorkQueue.size() + batchWorkQueue.size();
     }
 
+    // 后台线程执行
     class AcceptorRunner implements Runnable {
         @Override
         public void run() {
             long scheduleTime = 0;
             while (!isShutdown.get()) {
                 try {
+                    // 处理完输入队列
                     drainInputQueues();
 
+                    // 待执行任务数量
                     int totalItems = processingOrder.size();
 
+                    // 计算调度时间
                     long now = System.currentTimeMillis();
                     if (scheduleTime < now) {
                         scheduleTime = now + trafficShaper.transmissionDelay();
                     }
+                    // 调度
                     if (scheduleTime <= now) {
+                        // 调度批量任务
                         assignBatchWork();
+                        // 调度单任务
                         assignSingleItemWork();
                     }
 
@@ -219,13 +228,16 @@ class AcceptorExecutor<ID, T> {
 
         private void drainInputQueues() throws InterruptedException {
             do {
+                // 处理重新接受的队列
                 drainReprocessQueue();
+                // 处理接受的队列
                 drainAcceptorQueue();
 
                 if (isShutdown.get()) {
                     break;
                 }
                 // If all queues are empty, block for a while on the acceptor queue
+                // 所有队列为空，等待10s ，看接受队列是否有新任务
                 if (reprocessQueue.isEmpty() && acceptorQueue.isEmpty() && pendingTasks.isEmpty()) {
                     TaskHolder<ID, T> taskHolder = acceptorQueue.poll(10, TimeUnit.MILLISECONDS);
                     if (taskHolder != null) {

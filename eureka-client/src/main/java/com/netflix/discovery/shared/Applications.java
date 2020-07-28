@@ -231,8 +231,10 @@ public class Applications {
      */
     @JsonIgnore
     public String getReconcileHashCode() {
+        // 计数集合key : 应用实例信息
         TreeMap<String, AtomicInteger> instanceCountMap = new TreeMap<String, AtomicInteger>();
         populateInstanceCountMap(instanceCountMap);
+        // 计算hashcode
         return getReconcileHashCode(instanceCountMap);
     }
 

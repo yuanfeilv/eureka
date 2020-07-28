@@ -33,13 +33,15 @@ class TaskExecutors<ID, T> {
 
     private static final Map<String, TaskExecutorMetrics> registeredMonitors = new HashMap<>();
 
+    // 是否关闭
     private final AtomicBoolean isShutdown;
+    //工作线程池
     private final List<Thread> workerThreads;
 
     TaskExecutors(WorkerRunnableFactory<ID, T> workerRunnableFactory, int workerCount, AtomicBoolean isShutdown) {
         this.isShutdown = isShutdown;
         this.workerThreads = new ArrayList<>();
-
+        // 创建工作线程池
         ThreadGroup threadGroup = new ThreadGroup("eurekaTaskExecutors");
         for (int i = 0; i < workerCount; i++) {
             WorkerRunnable<ID, T> runnable = workerRunnableFactory.create(i);
@@ -69,6 +71,7 @@ class TaskExecutors<ID, T> {
         return new TaskExecutors<>(idx -> new SingleTaskWorkerRunnable<>("TaskNonBatchingWorker-" + name + '-' + idx, isShutdown, metrics, processor, acceptorExecutor), workerCount, isShutdown);
     }
 
+    // 创建批量任务执行器
     static <ID, T> TaskExecutors<ID, T> batchExecutors(final String name,
                                                        int workerCount,
                                                        final TaskProcessor<T> processor,
@@ -76,6 +79,7 @@ class TaskExecutors<ID, T> {
         final AtomicBoolean isShutdown = new AtomicBoolean();
         final TaskExecutorMetrics metrics = new TaskExecutorMetrics(name);
         registeredMonitors.put(name, metrics);
+        // 创建批量任务执行器
         return new TaskExecutors<>(idx -> new BatchWorkerRunnable<>("TaskBatchingWorker-" + name + '-' + idx, isShutdown, metrics, processor, acceptorExecutor), workerCount, isShutdown);
     }
 

@@ -24,6 +24,8 @@ import com.netflix.eureka.util.batcher.TaskProcessor.ProcessingResult;
  * depending on this feedback.
  *
  * @author Tomasz Bak
+ * 网络通信整形器
+ *
  */
 class TrafficShaper {
 
@@ -32,10 +34,14 @@ class TrafficShaper {
      */
     private static final long MAX_DELAY = 30 * 1000;
 
+    // 请求限流延迟重试时间
     private final long congestionRetryDelayMs;
+    //网络失败延迟重试时长
     private final long networkFailureRetryMs;
 
+    // 最后请求限流时间戳
     private volatile long lastCongestionError;
+    // 最后网络失败时间戳
     private volatile long lastNetworkFailure;
 
     TrafficShaper(long congestionRetryDelayMs, long networkFailureRetryMs) {
@@ -52,6 +58,7 @@ class TrafficShaper {
     }
 
     long transmissionDelay() {
+        // 无延迟
         if (lastCongestionError == -1 && lastNetworkFailure == -1) {
             return 0;
         }
