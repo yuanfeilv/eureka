@@ -35,6 +35,7 @@ import javax.inject.Singleton;
  * Represent the local server context and exposes getters to components of the
  * local server such as the registry.
  *
+ * 默认的eureka 上下文类
  * @author David Liu
  */
 @Singleton
@@ -60,10 +61,12 @@ public class DefaultEurekaServerContext implements EurekaServerContext {
         this.applicationInfoManager = applicationInfoManager;
     }
 
+    // bean 会自动执行方法
     @PostConstruct
     @Override
     public void initialize() {
         logger.info("Initializing ...");
+        // 启动线程获取其他线程的信息
         peerEurekaNodes.start();
         try {
             registry.init(peerEurekaNodes);

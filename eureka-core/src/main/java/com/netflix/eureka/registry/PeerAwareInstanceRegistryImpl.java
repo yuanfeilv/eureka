@@ -208,10 +208,12 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
         // Copy entire entry from neighboring DS node
         int count = 0;
 
+        // 小于重试注册的次数
         for (int i = 0; ((i < serverConfig.getRegistrySyncRetries()) && (count == 0)); i++) {
             // 未读取到注册信息，sleep 等待
             if (i > 0) {
                 try {
+                    // 如果不是第一次注册则线程休眠一定时间
                     Thread.sleep(serverConfig.getRegistrySyncRetryWaitMs());
                 } catch (InterruptedException e) {
                     logger.warn("Interrupted during registry transfer..");
@@ -256,7 +258,9 @@ public class PeerAwareInstanceRegistryImpl extends AbstractInstanceRegistry impl
             primeAwsReplicas(applicationInfoManager);
         }
         logger.info("Changing status to UP");
+        // 设置状态为up
         applicationInfoManager.setInstanceStatus(InstanceStatus.UP);
+        // 启动定时清理的任务
         super.postInit();
     }
 
